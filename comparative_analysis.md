@@ -29,6 +29,8 @@ This minimizes squared residuals in the original species-count scale and assumes
 | Reptiles | Original (log-linear) | 15.45 | 0.0747 | 0.33 (adj.) |
 | Reptiles | `sars` NLS | 10.96 | 0.1205 | 0.6619 |
 
+> **R² values are not directly comparable between rows.** The original R² is adjusted R² computed in log-space (measuring fit of log S vs. log A), while the `sars` R² is unadjusted and computed in arithmetic space (measuring fit of S vs. A). Both metrics are retained here to match their respective source methods, but side-by-side numerical comparison is not meaningful.
+
 The c parameter (baseline richness) is systematically lower under NLS, while z (the scaling exponent) is higher. This shift is expected: log-linear regression overweights small-area sites relative to their absolute residuals, pulling c upward and z downward. The discrepancy is most dramatic for reptiles, where z increases by 61% (0.0747 → 0.1205).
 
 The original R² values are adjusted R² in log-space, while the `sars` values are unadjusted R² in arithmetic space. These are not directly comparable, but both tell the same story: herpetofauna and amphibians fit the power model well; reptiles do not.
@@ -106,7 +108,9 @@ Testing both fitting methods against independent sites from the original publica
 | GSMNP | 2,114 | 43 | 42.3 | 42.7 | 38 | 27.6 | 27.4 |
 | Cumberland Gap NHP | 82.74 | 28 | 25.1 | 26.7 | 20 | 18.7 | 21.5 |
 | Radford AAP | 32.7 | 19 | 21.6 | 23.3 | 14 | 16.7 | 20.1 |
-| Henderson Wetland | 0.101 | 12 | 8.5 | 10.1 | — | 8.3 | 13.0 |
+| Henderson Wetland | 0.101 | 12 | 8.5 | 10.1 | —* | 8.3 | 13.0 |
+
+\* Henderson Wetland reptile count is unavailable because the site was not surveyed for reptiles in the original study. Reptile predictions are shown for completeness but cannot be validated.
 
 For amphibians, both methods produce similar predictions. The NLS model gives slightly lower estimates that happen to be closer to reported values at GSMNP (42.3 vs. 43) and Radford AAP, but slightly farther from Cumberland Gap.
 
@@ -119,6 +123,17 @@ At small areas (Henderson Wetland, 0.101 km²), the methods diverge more noticea
 `sars.sar_threshold()` tests for breakpoints (small-island effect) by comparing continuous two-slope, left-horizontal + right slope, and simple linear models. For all three taxonomic groups, the analysis selects the simple linear model with no breakpoint detected.
 
 This is expected at n = 4 — insufficient data to support a piecewise structure — but documents the absence of statistical support for a small-island effect at this sample size.
+
+## Limitations
+
+All conclusions in this analysis are based on n = 4 data points, which is extremely small for any regression methodology. With only 4 observations:
+
+- **Degrees of freedom are minimal.** Two-parameter models have only 2 residual degrees of freedom; 3-parameter models have just 1. Any model with 3+ parameters can fit the data nearly perfectly regardless of its ecological plausibility.
+- **AICc is undefined** for all models (see "The AICc Limitation" above), precluding standard model averaging and Akaike weight comparisons.
+- **Statistical power is negligible.** Confidence intervals on parameters are wide, and distinguishing between competing model forms (power vs. logarithmic vs. linear) is not statistically meaningful at this sample size.
+- **The NLS vs. OLS comparison is illustrative, not definitive.** Both methods fit the amphibian data well and the reptile data poorly. The parameter shifts between methods, while consistent with theoretical expectations, should not be over-interpreted given the sample size.
+
+These limitations apply equally to the original publication's log-linear analysis and to the NLS reanalysis presented here. The results are best viewed as a baseline that motivates expanded sampling at intermediate spatial scales.
 
 ## Recommendations for Further Work
 
